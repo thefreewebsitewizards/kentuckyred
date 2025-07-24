@@ -32,17 +32,29 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Navbar background on scroll
+// Navbar dissolve effect on scroll
 window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = 'none';
-    }
-});
+    const navbar = document.querySelector('.magazine-header');
+    if (navbar) {
+        const scrollY = window.scrollY;
+        const maxScroll = 300; // Distance to fully dissolve
+        
+        // Calculate opacity based on scroll position (1 to 0)
+        let opacity = Math.max(0, 1 - (scrollY / maxScroll));
+        
+        // Apply the dissolve effect
+        navbar.style.opacity = opacity;
+        
+        // Optional: Add a slight background change for better visibility when partially dissolved
+        if (scrollY > 50) {
+            navbar.style.background = `rgba(255, 255, 255, ${Math.min(0.95, opacity + 0.1)})`;
+            navbar.style.boxShadow = `0 2px 20px rgba(0, 0, 0, ${Math.min(0.1, opacity * 0.1)})`;
+        } else {
+            navbar.style.background = 'transparent';
+            navbar.style.boxShadow = 'none';
+        }
+     }
+ });
 
 // Scroll animations
 const observerOptions = {
