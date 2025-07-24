@@ -972,6 +972,12 @@ p {
     .magazine-header {
         padding: 1.5rem 0;
         text-align: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
     }
     
     .header-top {
@@ -1057,7 +1063,7 @@ p {
     
     /* Featured/Cover Story Section Mobile Styles */
     .cover-story {
-        padding: 3rem 0;
+        padding: 6rem 0 3rem 0; /* Added top padding for fixed header */
     }
     
     .cover-layout {
