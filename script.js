@@ -32,29 +32,49 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Navbar dissolve effect on scroll
-window.addEventListener('scroll', () => {
+// Enhanced navbar dissolve effect on scroll
+let ticking = false;
+
+function updateNavbar() {
     const navbar = document.querySelector('.magazine-header');
     if (navbar) {
         const scrollY = window.scrollY;
-        const maxScroll = 300; // Distance to fully dissolve
+        const maxScroll = window.innerWidth <= 768 ? 200 : 300; // Shorter dissolve distance on mobile
+        const isMobile = window.innerWidth <= 968;
         
         // Calculate opacity based on scroll position (1 to 0)
-        let opacity = Math.max(0, 1 - (scrollY / maxScroll));
+        let opacity = Math.max(0.1, 1 - (scrollY / maxScroll)); // Minimum opacity of 0.1 for accessibility
         
         // Apply the dissolve effect
         navbar.style.opacity = opacity;
         
-        // Optional: Add a slight background change for better visibility when partially dissolved
+        // Add scrolled class for styling
         if (scrollY > 50) {
-            navbar.style.background = `rgba(255, 255, 255, ${Math.min(0.95, opacity + 0.1)})`;
-            navbar.style.boxShadow = `0 2px 20px rgba(0, 0, 0, ${Math.min(0.1, opacity * 0.1)})`;
+            navbar.classList.add('scrolled');
+            if (isMobile) {
+                navbar.style.background = `rgba(255, 255, 255, ${Math.min(0.95, opacity + 0.2)})`;
+                navbar.style.backdropFilter = 'blur(10px)';
+            } else {
+                navbar.style.background = `rgba(255, 255, 255, ${Math.min(0.95, opacity + 0.1)})`;
+            }
+            navbar.style.boxShadow = `0 2px 20px rgba(0, 0, 0, ${Math.min(0.15, opacity * 0.15)})`;
         } else {
-            navbar.style.background = 'transparent';
+            navbar.classList.remove('scrolled');
+            navbar.style.background = isMobile ? 'rgba(255, 255, 255, 0.95)' : '#fff';
             navbar.style.boxShadow = 'none';
+            navbar.style.backdropFilter = isMobile ? 'blur(10px)' : 'none';
         }
-     }
- });
+    }
+    ticking = false;
+}
+
+// Optimized scroll listener using requestAnimationFrame
+window.addEventListener('scroll', () => {
+    if (!ticking) {
+        requestAnimationFrame(updateNavbar);
+        ticking = true;
+    }
+});
 
 // Scroll animations
 const observerOptions = {
@@ -432,9 +452,22 @@ preloadImages();
 window.addEventListener('resize', () => {
     // Close mobile menu on resize
     if (window.innerWidth > 768) {
-        navMenu.classList.remove('active');
-        navToggle.classList.remove('active');
+        const navMenu = document.getElementById('nav-menu');
+        const navToggle = document.getElementById('nav-toggle');
+        if (navMenu) navMenu.classList.remove('active');
+        if (navToggle) navToggle.classList.remove('active');
     }
+    
+    // Update navbar styling on resize
+    if (!ticking) {
+        requestAnimationFrame(updateNavbar);
+        ticking = true;
+    }
+});
+
+// Initialize navbar state on page load
+document.addEventListener('DOMContentLoaded', () => {
+    updateNavbar();
 });
 
 console.log('Kentucky Red website initialized successfully!');
