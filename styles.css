@@ -1198,7 +1198,7 @@ p {
     
     /* Featured/Cover Story Section Mobile Styles */
     .cover-story {
-        padding: 6rem 0 3rem 0; /* Added top padding for fixed header */
+        padding: 8rem 0 3rem 0; /* Added extra top padding for mobile spacing */
     }
     
     .cover-layout {
@@ -1662,7 +1662,7 @@ p {
     
     /* Featured/Cover Story Section Small Mobile Styles */
     .cover-story {
-        padding: 2rem 0;
+        padding: 6rem 0 2rem 0;
     }
     
     .cover-layout {
